@@ -99,6 +99,21 @@ export class PTUActor extends Actor {
 
     if (this.id === game.ptu.sidebar?.store?.state?.actorId) game.ptu.sidebar.stateHasChanged();
     if (game.ptu.sidebar?.store?.state?.targetedActors.includes(this.id)) game.ptu.sidebar.stateHasChanged(true);
+    if (game?.combat) {
+      for(let combatant of game.combat.combatants)
+      {
+        if(combatant?.actor?.id == this.id)
+        {
+          let old_initiative = Math.floor(combatant.initiative);
+          let initiative_tiebreaker = combatant.initiative - old_initiative;
+          let new_initiative = combatant.actor.data.data.stats.spd.total + combatant.actor.data.data.modifiers.initiative.total;
+          if(new_initiative != old_initiative)
+          {
+            game.combat.updateEmbeddedDocuments('Combatant', [{ _id:combatant.id, initiative:Number(new_initiative+initiative_tiebreaker) }]);
+          }
+        }
+      }
+    }
   }
 
   /**

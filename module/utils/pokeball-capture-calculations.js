@@ -97,6 +97,8 @@ export async function RollCaptureChance(trainer, target, pokeball, to_hit_roll, 
 		mod: -trainer.data.data.level.current
 	}
 
+	captureData.mod += Number(game.settings.get("ptu", "globalCaptureRateModifier") ?? 0)
+
 	// let CaptureRollModifier = 0;
 	// let CaptureRate = 100;
 	const targetData = {

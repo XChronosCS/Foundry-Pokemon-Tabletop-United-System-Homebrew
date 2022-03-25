@@ -385,6 +385,16 @@ export function LoadSystemSettings() {
         default: 0,
         category: "other"
     })
+
+    game.settings.register("ptu", "globalCaptureRateModifier", {
+        name: "Global Capture Rate Modifier",
+        hint: "Set a global modifier that applies to all capture rolls. Negative numbers make captures easier, positive numbers make captures harder. Default: 0.",
+        scope: "world",
+        config: true,
+        type: Number,
+        default: 0,
+        category: "rules"
+    });
     // Move Master Settings
     {
         game.settings.register("ptu", "autoApplyInjuries", {

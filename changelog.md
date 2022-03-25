@@ -1,6 +1,14 @@
 # Welcome to the Beta!
 Hey there! You are on the Beta Branch. If you ever have any feedback please do share with us over on [Github](https://github.com/dylanpiera/Foundry-Pokemon-Tabletop-United-System/issues) or [Discord](https://discord.gg/fE3w59q)
 
+## 2.0-Beta-6
+Hotfix for a bug with the revamped initiative that prevented initiative from updating when stats change.
+
+Also added a Global Catch Rate Modifier config option.
+
+## 2.0-Beta-5
+Hotfix to support pokemon token generation with the full range of transparent image formats; in order, it will try .webm, .webp, and .png, stopping and using the first one it actually finds a corresponding image for.
+
 ## 2.0-Beta-4
 This update fixes a few bugs around Pokeball effects, as well as a significant revamp (thanks to Colton who spearheaded this) of the initiative system, adding support for Boss Initiative and League Initiative, as well as a UI toggle (checkmark/X) in the combat tracker that automatically checks off and fades-out actors in the list when they finish their turns, and skips up or down the list to the highest not-gone-yet actor when the turn is advanced if initiative has shuffled around due to speed changes or the like.
 

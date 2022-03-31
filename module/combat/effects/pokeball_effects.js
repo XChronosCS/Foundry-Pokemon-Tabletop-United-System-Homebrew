@@ -320,7 +320,7 @@ export async function ThrowPokeball(thrower, target, pokeball) {
             .play();
     }
 
-    AudioHelper.play({ src: pokeball_sound_paths[hitType], volume: 0.8, autoplay: true, loop: false }, true);
+    AudioHelper.play({ src: pokeball_sound_paths[hitType], volume: (game.settings.get("core", "globalInterfaceVolume")), autoplay: true, loop: false }, true);
 
     await timeout(1000);
     await roll.toMessage({ flavor: `Pokeball throw vs ${target.name}'s ${targetEvasion} Speed Evasion:`, sound: null });
@@ -348,16 +348,16 @@ export async function ThrowPokeball(thrower, target, pokeball) {
 
         if (isCaptured == true) // Captured!
         {
-            await AudioHelper.play({ src: pokeball_sound_paths["capture_success"], volume: 0.8, autoplay: true, loop: false }, true);
+            await AudioHelper.play({ src: pokeball_sound_paths["capture_success"], volume: (game.settings.get("core", "globalInterfaceVolume")), autoplay: true, loop: false }, true);
     
             await timeout(1000);
-            await AudioHelper.play({ src: pokeball_sound_paths["capture_jingle"], volume: 0.7, autoplay: true, loop: false }, true);
+            await AudioHelper.play({ src: pokeball_sound_paths["capture_jingle"], volume: (game.settings.get("core", "globalInterfaceVolume")), autoplay: true, loop: false }, true);
 
             await applyCapture(thrower, target, pokeball, game.ptu.GetSpeciesData(target.actor.data.data.species)); 
         }
         else // Escaped!
         {
-            await AudioHelper.play({ src: pokeball_sound_paths["release"], volume: 0.7, autoplay: true, loop: false }, true);
+            await AudioHelper.play({ src: pokeball_sound_paths["release"], volume: (game.settings.get("core", "globalInterfaceVolume")), autoplay: true, loop: false }, true);
             await TokenMagic.addFilters(target, pokeball_capture_TMFX_params);
     
             await timeout(100);
@@ -439,7 +439,7 @@ export async function PlayReleaseOwnedPokemonAnimation(token) {
                 await target_token.document.update({ "alpha": (0) });
             }
 
-            await AudioHelper.play({src: pokeball_sound_paths["miss"], volume: 0.5, autoplay: true, loop: false}, true);
+            await AudioHelper.play({src: pokeball_sound_paths["miss"], volume: (game.settings.get("core", "globalInterfaceVolume")), autoplay: true, loop: false}, true);
 
             let targetImagePath = item_icon_path+pokeball+".webp";
 
@@ -460,7 +460,7 @@ export async function PlayReleaseOwnedPokemonAnimation(token) {
                 }
 
                 await timeout(500);
-                await AudioHelper.play({src: pokeball_sound_paths["release"], volume: 0.5, autoplay: true, loop: false}, true); 
+                await AudioHelper.play({src: pokeball_sound_paths["release"], volume: (game.settings.get("core", "globalInterfaceVolume")), autoplay: true, loop: false}, true); 
 
                 await timeout(500);
                 await target_token.TMFXaddUpdateFilters(pokeballShoop_params); 
@@ -568,7 +568,7 @@ export async function PlayPokeballReturnAnimation(pokemon_token)
             await TokenMagic.addFilters(pokemon_token.object, pokeball_capture_TMFX_params);
         }
     
-        await AudioHelper.play({ src: pokeball_sound_paths["return"], volume: 0.7, autoplay: true, loop: false }, true);
+        await AudioHelper.play({ src: pokeball_sound_paths["return"], volume: (game.settings.get("core", "globalInterfaceVolume")), autoplay: true, loop: false }, true);
     
         await timeout(2000);
         await pokemon_token.delete()
@@ -588,7 +588,7 @@ export async function PlayPokeballShoopFX(target_token, pokeball_image_path, to_
         await pokeballPolymorphFunc(pokeball_image_path, target_token);
     }
 
-    await AudioHelper.play({ src: pokeball_sound_paths["capture_attempt"], volume: 0.8, autoplay: true, loop: false }, true);
+    await AudioHelper.play({ src: pokeball_sound_paths["capture_attempt"], volume: (game.settings.get("core", "globalInterfaceVolume")), autoplay: true, loop: false }, true);
 }
 
 
@@ -636,7 +636,7 @@ export async function PlayPokeballCatchOrEscapeFX(isCaptured, targetToken)
 
 export async function PlayPokeballWiggleFX(target_token)
 {
-    await AudioHelper.play({ src: pokeball_sound_paths["wiggle"], volume: 0.8, autoplay: true, loop: false }, true);
+    await AudioHelper.play({ src: pokeball_sound_paths["wiggle"], volume: (game.settings.get("core", "globalInterfaceVolume")), autoplay: true, loop: false }, true);
 
     if (!(game.modules.get("tokenmagic")?.active) || !(game.settings.get("ptu", "enableMoveAnimations") == true))
     {

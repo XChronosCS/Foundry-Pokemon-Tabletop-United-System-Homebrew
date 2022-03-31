@@ -289,7 +289,7 @@ export default class PTUCombat {
     if (!combat.started) return;
 
     if (options.turn.direction == CONFIG.PTUCombat.DirectionOptions.FORWARD) {
-      await AudioHelper.play({src: ("systems/ptu/sounds/ui_sounds/ui_button.wav"), volume: 0.5, autoplay: true, loop: false}, true);
+      if(game.settings.get("ptu", "PlayUISounds")) await AudioHelper.play({src: ("systems/ptu/sounds/ui_sounds/ui_button.wav"), volume: (game.settings.get("core", "globalInterfaceVolume")), autoplay: true, loop: false}, true);
       await game.ptu.PlayPokemonCry(combatant?.actor?.data?.data?.species);
     }
 

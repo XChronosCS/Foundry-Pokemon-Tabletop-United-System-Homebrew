@@ -104,7 +104,7 @@ export async function healActorRest(actor, hours=8, bandage_used=false, pokecent
 		}
 	}
 
-	await AudioHelper.play({src: battle_sound_paths["heal"][healing_sound], volume: 0.8, autoplay: true, loop: false}, true);
+	await AudioHelper.play({src: battle_sound_paths["heal"][healing_sound], volume: (game.settings.get("core", "globalInterfaceVolume")), autoplay: true, loop: false}, true);
 
 	await actor.update({'data.health.injuries': Math.max(Number(actor.data.data.health.injuries - injuries_healed), 0) });
 

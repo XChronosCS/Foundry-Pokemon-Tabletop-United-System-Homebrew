@@ -121,7 +121,7 @@ export class PTUSidebar extends FormApplication {
       if (actor) 
       {
         self.store.dispatch("setActor", token.data.actorId);
-        AudioHelper.play({ src: ui_sound_paths["flip"], volume: 0.3, autoplay: true, loop: false }, false);
+        if(game.settings.get("ptu", "PlayUISounds")) AudioHelper.play({ src: ui_sound_paths["flip"], volume: (game.settings.get("core", "globalInterfaceVolume")/2), autoplay: true, loop: false }, false);
       }
     }
     else { // If token got unselected

@@ -94,15 +94,15 @@ export async function PlayHitAndMissSounds(attacksData, moveCategory)
 
 	if(hit_count > 0)
 	{
-		await AudioHelper.play({src: (hit_sound_file), volume: 0.8, autoplay: true, loop: false}, true);
+		await AudioHelper.play({src: (hit_sound_file), volume: (game.settings.get("core", "globalInterfaceVolume")), autoplay: true, loop: false}, true);
 	}
 	if(crit_count > 0)
 	{
-		await AudioHelper.play({src: (crit_sound_file), volume: 0.8, autoplay: true, loop: false}, true);
+		await AudioHelper.play({src: (crit_sound_file), volume: (game.settings.get("core", "globalInterfaceVolume")), autoplay: true, loop: false}, true);
 	}
 	if(miss_count > 0)
 	{
-		await AudioHelper.play({src: (miss_sound_file), volume: 0.8, autoplay: true, loop: false}, true);
+		await AudioHelper.play({src: (miss_sound_file), volume: (game.settings.get("core", "globalInterfaceVolume")), autoplay: true, loop: false}, true);
 	}
 	
     return;
@@ -118,7 +118,7 @@ export async function PlayMoveSounds(move, attacksData)
 
     let move_sound_path = await GetMoveSoundPath(move.name);
 
-    await AudioHelper.play({src: move_sound_path, volume: 0.8, autoplay: true, loop: false}, true);
+    await AudioHelper.play({src: move_sound_path, volume: (game.settings.get("core", "globalInterfaceVolume")), autoplay: true, loop: false}, true);
 
 	if( (move.range.toLowerCase().includes("self") == false) && (move.range.toLowerCase().includes("blessing") == false) && (move.range.toLowerCase().includes("field") == false))
 	{

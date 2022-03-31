@@ -66,33 +66,39 @@ export default class MenuComponent extends Component {
                 case "struggle":
                     if (this.state.menuOption == type) {
                         this.store.dispatch('changeMenuOption', "none");
-                        AudioHelper.play({ src: ui_sound_paths["check_off"], volume: 0.8, autoplay: true, loop: false }, false);
+                        if(game.settings.get("ptu", "PlayUISounds")) AudioHelper.play({ src: ui_sound_paths["check_off"], volume: (game.settings.get("core", "globalInterfaceVolume")), autoplay: true, loop: false }, false);
                     }
                     else {
                         this.store.dispatch('changeMenuOption', type);
-                        AudioHelper.play({ src: ui_sound_paths["check_on"], volume: 0.8, autoplay: true, loop: false }, false);
+                        if(game.settings.get("ptu", "PlayUISounds")) AudioHelper.play({ src: ui_sound_paths["check_on"], volume: (game.settings.get("core", "globalInterfaceVolume")), autoplay: true, loop: false }, false);
                     }
                     break;
                 case "pokeball":
                     if (this.state.menuOption == type) {
                         this.store.dispatch('changeMenuOption', "none");
-                        AudioHelper.play({ src: pokeball_sound_paths["menu_close"], volume: 0.8, autoplay: true, loop: false }, false);
-                        AudioHelper.play({ src: ui_sound_paths["check_off"], volume: 0.8, autoplay: true, loop: false }, false);
+                        if(game.settings.get("ptu", "PlayUISounds")) 
+                        {
+                            AudioHelper.play({ src: pokeball_sound_paths["menu_close"], volume: (game.settings.get("core", "globalInterfaceVolume")), autoplay: true, loop: false }, false);
+                            AudioHelper.play({ src: ui_sound_paths["check_off"], volume: (game.settings.get("core", "globalInterfaceVolume")), autoplay: true, loop: false }, false);
+                        }
                     }
                     else {
                         this.store.dispatch('changeMenuOption', type);
-                        AudioHelper.play({ src: pokeball_sound_paths["menu_open"], volume: 0.8, autoplay: true, loop: false }, false);
-                        AudioHelper.play({ src: ui_sound_paths["check_on"], volume: 0.8, autoplay: true, loop: false }, false);
+                        if(game.settings.get("ptu", "PlayUISounds")) 
+                        {
+                            AudioHelper.play({ src: pokeball_sound_paths["menu_open"], volume: (game.settings.get("core", "globalInterfaceVolume")), autoplay: true, loop: false }, false);
+                            AudioHelper.play({ src: ui_sound_paths["check_on"], volume: (game.settings.get("core", "globalInterfaceVolume")), autoplay: true, loop: false }, false);
+                        }
                     }
                     break;
                 case "maneuver":
                     if (this.state.menuOption == type) {
                         this.store.dispatch('changeMenuOption', "none");
-                        AudioHelper.play({ src: ui_sound_paths["check_off"], volume: 0.8, autoplay: true, loop: false }, false);
+                        if(game.settings.get("ptu", "PlayUISounds")) AudioHelper.play({ src: ui_sound_paths["check_off"], volume: (game.settings.get("core", "globalInterfaceVolume")), autoplay: true, loop: false }, false);
                     }
                     else {
                         this.store.dispatch('changeMenuOption', type);
-                        AudioHelper.play({ src: ui_sound_paths["check_on"], volume: 0.8, autoplay: true, loop: false }, false);
+                        if(game.settings.get("ptu", "PlayUISounds")) AudioHelper.play({ src: ui_sound_paths["check_on"], volume: (game.settings.get("core", "globalInterfaceVolume")), autoplay: true, loop: false }, false);
                     }
                     break;
                 case "rest":

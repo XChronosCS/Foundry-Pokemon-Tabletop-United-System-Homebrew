@@ -1,5 +1,5 @@
 <div class="d-flex pb-1" id="menu-buttons">
-    <button title="Coming Soon" disabled class="menu-item p-1" id="struggle-button" data-type="struggle">Struggles</button>
+    <button title="Coming Soon" class="menu-item p-1" id="struggle-button" data-type="struggle">Struggles</button>
     <button title="Coming Soon" disabled class="menu-item p-1" id="maneuver-button" data-type="maneuver">Maneuvers</button>
     <button title="Pokeball Menu" class="menu-item p-1" id="pokeball-button" data-type="pokeball">Pokeballs</button>
     <button title="Coming Soon" disabled class="menu-item p-1" id="rest-button" data-type="rest">Resting</button>
@@ -19,8 +19,8 @@
                                     {{struggle.name}}
                                 </div>
                                 <!-- Frequency -->
-                                <img src="{{calcFrequencyIconPath struggle.data.frequency '0'}}" title="{{struggle.data.frequency}} ({{'0'}} Remaining)"
-                                    style="border-width: 0;">
+                                {{!-- <img src="{{calcFrequencyIconPath struggle.data.frequency '0'}}" title="{{struggle.data.frequency}} ({{'0'}} Remaining)"
+                                    style="border-width: 0;"> --}}
                                 <!-- Typings -->
                                 <div class="type-bar">
                                     <img src="systems/ptu/images/icons/{{struggle.data.category}}.png" />
@@ -28,13 +28,13 @@
                                 </div>
                             </h3>
                             <!-- Stab Bar -->
-                            {{#if struggle.data.stab}}
+                            {{!-- {{#if struggle.data.stab}}
                             <div class="col p-0">
                                 <span class="type-img">
                                     <img src="/systems/ptu/images/icons/STAB_Border.png" style="height: 1px;" />
                                 </span>
                             </div>
-                            {{/if}}
+                            {{/if}} --}}
                             <!-- Damage Base Bar -->
                             {{!-- {{#if (and (not data.damageBase "--") (not (contains "damage" (data.damageBase)) true)) }} --}}
                             {{#unless (is struggle.data.damageBase "--")}}

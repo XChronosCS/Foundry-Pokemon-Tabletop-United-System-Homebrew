@@ -1,4 +1,5 @@
 import { debug, log } from "../../ptu.js";
+import { timeout } from "../../utils/generic-helpers.js";
 
 export const move_animation_delay_ms = 1100;
 
@@ -435,9 +436,8 @@ async function PlayMoveMissedAttackAnimation(move, moveUserToken, moveTargetToke
                 .repeats(...repeats)
             .play();
     }
-    setTimeout( async () => { 
-        await PlayMissDodgeAnimation(moveTargetToken);
-    }, move_animation_delay_ms);
+    await timeout(move_animation_delay_ms)
+    await PlayMissDodgeAnimation(moveTargetToken);
 }
 
 

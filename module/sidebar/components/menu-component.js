@@ -1,5 +1,7 @@
 import Component from '../../api/front-end/lib/component.js';
 import { pokeball_sound_paths } from '../../combat/effects/pokeball_effects.js';
+import { sendMoveMessage } from '../../actor/pokemon-sheet-gen8.js';
+import { CoatIcon, FullActionIcon, ShiftActionIcon, BlastIcon, BlessingIcon, BurstIcon, LineIcon, MeleeIcon, SelfIcon, RangeIcon, TriggerIcon, FieldIcon, SwiftActionIcon, HealingIcon, FriendlyIcon, SonicIcon, InterruptIcon, ShieldIcon, SocialIcon, FiveStrikeIcon, DoubleStrikeIcon, GroundsourceIcon, SmiteIcon, ExhaustIcon, PassIcon, SetupIcon, IllusionIcon } from '../constants.js';
 
 export const ui_sound_paths = {
     "button": "systems/ptu/sounds/ui_sounds/ui_button.wav",
@@ -30,12 +32,13 @@ export default class MenuComponent extends Component {
 
         const dividerIcon = "<img class='divider-image' src='systems/ptu/images/icons/Divider.png' style='border:none; width:200px;'>"
         let output = dividerIcon;
+        this.struggles_list = await this._getStruggles(this.state.actor, this.state.targetedActors);
 
         switch (this.state.menuOption) {
             case "struggle":
                 output += await renderTemplate("/systems/ptu/module/sidebar/components/menu-component.hbs", {
                     menu: "struggle",
-                    struggles: await this._getStruggles(this.state.actor)
+                    struggles: this.struggles_list
                 })
                 break;
             case "pokeball":
@@ -113,6 +116,27 @@ export default class MenuComponent extends Component {
             const owner = game.actors.get(ownerId);
             game.ptu.ThrowPokeball(owner, game.user?.targets?.first(), owner?.items.get(entityId));
         })
+
+        for (const move of this.struggles_list ?? []) {
+            $(`.movemaster-button[data-button="${move._id}"]`).on("mousedown", (event) => {
+                // Handle on move click here, for now just log that button is clicked
+                switch(event.which) {
+                    case 3: // Right click
+                        sendMoveMessage({
+                            speaker: ChatMessage.getSpeaker({
+                                actor: this.state.actor
+                            }),
+                            moveName: move.name,
+                            move: move.data,
+                        })
+                        break;
+                    case 1: // Left click
+                    case 2: // Middle click
+                    default: // anything else??
+                        this.state.actor.executeMove(move._id, {passingInMove:true, passedInMove:move})
+                }
+            })
+        }
 
         this.element.children(".divider-image").on("click", () => {
             if (this._hidden) {
@@ -193,7 +217,7 @@ export default class MenuComponent extends Component {
         return "black";
     }
 
-    async _getStruggles(actor) {
+    async _getStruggles(actor, targetIds) {
         if (!actor) return;
 
         const struggleAc = actor.data.data.skills.combat.value >= 5 ? 3 : 4;
@@ -208,36 +232,109 @@ export default class MenuComponent extends Component {
             "telekinetic": { "type": "Normal" },
             "zapper": { "type": "Electric" }
         };
-        const isTelekinetic = actor.data.itemTypes.capability.includes("Telekinetic");
+        const isTelekinetic = (typeof actor.itemTypes.capability.find(x => x.name.includes("Telekinetic")) != "undefined");//actor.itemTypes.capability.includes("Telekinetic");
+
+        let range = (isTelekinetic ? actor.data.data.skills.focus.value.total+", 1 Target" : "Melee" + ", 1 Target");
+        let rangeIconsHtml = this._getRangeIcons(range);
+
+        let effectiveness = 1;
+
+        if (targetIds.length == 0) {
+            effectiveness = -1;
+        }
+        if (targetIds.length == 1) {
+            effectiveness = this.store.getTarget(targetIds[0]).data.data.effectiveness?.All["Normal"] ?? 1;
+        }
+        if (targetIds.length > 1) { // TODO: Maybe add a way to display multiple effectiveness borders?
+            effectiveness = -1;
+        }
 
         const struggles = [{
             name: "Struggle",
-            type: "Normal",
-            category: "Physical",
-            ac: struggleAc,
-            db: struggleDb,
-            range: isTelekinetic ? actor.data.data.skills.focus.value.total : "Melee" + ", 1 Target"
+            data:{
+                name: "Struggle",
+                type: "Normal",
+                category: "Physical",
+                ac: struggleAc,
+                damageBase: struggleDb,
+                frequency:"At-Will",
+                range: range,
+                rangeIconsHtml: rangeIconsHtml,
+                effectiveness: effectiveness,
+                data:{
+                    name: "Struggle",
+                    type: "Normal",
+                    category: "Physical",
+                    ac: struggleAc,
+                    damageBase: struggleDb,
+                    frequency:"At-Will",
+                    range: range,
+                    rangeIconsHtml: rangeIconsHtml,
+                    effectiveness: effectiveness
+                }
+            },
+            _id:"StrugglePhysical"
         }];
 
-        for (const item of actor.data.itemTypes.capability) {
+        for (const item of actor.itemTypes.capability) {
             const capability = struggleCapabilities[item.name.toLowerCase()];
             if (!capability) continue;
 
+            if (targetIds.length == 1) {
+                effectiveness = this.store.getTarget(targetIds[0]).data.data.effectiveness?.All[capability.type] ?? 1;
+            }
+
             struggles.push({
                 name: item.name,
-                type: capability.type,
-                ac: struggleAc,
-                db: struggleDb,
-                category: "Physical",
-                range: isTelekinetic ? actor.data.data.skills.focus.value.total : "Melee" + ", 1 Target"
+                data:{
+                    name: item.name,
+                    type: capability.type,
+                    ac: struggleAc,
+                    damageBase: struggleDb,
+                    category: "Physical",
+                    frequency:"At-Will",
+                    range: range,
+                    rangeIconsHtml: rangeIconsHtml,
+                    effectiveness: effectiveness,
+                    data:{
+                        name: item.name,
+                        type: capability.type,
+                        ac: struggleAc,
+                        damageBase: struggleDb,
+                        category: "Physical",
+                        frequency:"At-Will",
+                        range: range,
+                        rangeIconsHtml: rangeIconsHtml,
+                        effectiveness: effectiveness
+                    }
+                },
+                _id:item.name+"Physical"
             });
             struggles.push({
                 name: item.name,
-                type: capability.type,
-                ac: struggleAc,
-                db: struggleDb,
-                category: "Special",
-                range: isTelekinetic ? actor.data.data.skills.focus.value.total : "Melee" + ", 1 Target"
+                data:{
+                    name: item.name,
+                    type: capability.type,
+                    ac: struggleAc,
+                    damageBase: struggleDb,
+                    category: "Special",
+                    frequency:"At-Will",
+                    range: range,
+                    rangeIconsHtml: rangeIconsHtml,
+                    effectiveness: effectiveness,
+                    data:{
+                        name: item.name,
+                        type: capability.type,
+                        ac: struggleAc,
+                        damageBase: struggleDb,
+                        category: "Special",
+                        frequency:"At-Will",
+                        range: range,
+                        rangeIconsHtml: rangeIconsHtml,
+                        effectiveness: effectiveness
+                    }
+                },
+                _id:item.name+"Special"
             })
         }
 
@@ -254,5 +351,62 @@ export default class MenuComponent extends Component {
                 amount: item.data.data.quantity
             }
         });
+    }
+
+
+    _getRangeIcons(rangeText, actionType = "Standard") {
+        if(!rangeText) return;
+        const range = rangeText.toLowerCase().split(",").map(x => x.trim());
+
+        let o = "";
+        for(const r of range.slice(0, -1)) {
+            const x = getIcon(r);
+            if(x) o += `<span>${x}</span>`;
+        }
+        const x = getIcon(range[range.length-1]);
+        if(x) o += `<span>${x}</span>`;
+
+        function getIcon(range) {
+            if(!range) return;
+            switch (true) {
+                case range.includes("see effect"): return range;
+                case range.includes("blessing"): return BlessingIcon; 
+                case range.includes("self"): return SelfIcon;
+                case range.includes("burst"): return BurstIcon + range.slice(range.indexOf("burst")+"burst".length).split(',')[0].trim();
+                case range.includes("line"): return LineIcon + range.slice(range.indexOf("line")+"line".length).split(',')[0].trim();
+                case range.includes("close blast"): return MeleeIcon + BlastIcon + range.slice(range.indexOf("close blast")+"close blast".length).split(',')[0].trim();
+                case range.includes("ranged blast"): return BlastIcon + range.slice(range.indexOf("ranged blast")+"ranged blast".length).split(',')[0].trim();
+                case range.includes("melee"): return MeleeIcon;
+                case range.includes("trigger"): return TriggerIcon;
+                case range.includes("field"): return FieldIcon;
+                case range.includes("swift action"): return SwiftActionIcon;
+                case range.includes("full action"): return FullActionIcon;
+                case range.includes("shift"): return ShiftActionIcon;
+                case range.includes("healing"): return HealingIcon;
+                case range.includes("friendly"): return FriendlyIcon;
+                case range.includes("sonic"): return SonicIcon;
+                case range.includes("interrupt"): return InterruptIcon;
+                case range.includes("shield"): return ShieldIcon;
+                case range.includes("social"): return SocialIcon;
+                case range.includes("five strike"): 
+                case range.includes("fivestrike"): return FiveStrikeIcon;
+                case range.includes("double strike"): 
+                case range.includes("doublestrike"): return DoubleStrikeIcon;
+                case range.includes("groundsource"): return GroundsourceIcon;
+                case range.includes("smite"): return SmiteIcon;
+                case range.includes("exhaust"): return ExhaustIcon;
+                case range.includes("pass"): return PassIcon;
+                case range.includes("set-up"): return SetupIcon;
+                case range.includes("illusion"): return IllusionIcon;
+                case range.includes("coat"): return CoatIcon;
+                case !isNaN(Number(range)): return RangeIcon + range.split(',')[0].trim()
+                default: {
+                    if(range.includes("1 target")) return "";
+                    return `${range}`;
+                }
+            }
+        }
+        
+        return o;
     }
 }

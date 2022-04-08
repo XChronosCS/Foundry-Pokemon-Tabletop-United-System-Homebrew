@@ -1,4 +1,5 @@
 import { debug, log } from "../../ptu.js";
+import { timeout } from "../../utils/generic-helpers.js";
 
 export const battle_sound_paths = {
 	"miss":{
@@ -122,7 +123,8 @@ export async function PlayMoveSounds(move, attacksData)
 
 	if( (move.range.toLowerCase().includes("self") == false) && (move.range.toLowerCase().includes("blessing") == false) && (move.range.toLowerCase().includes("field") == false))
 	{
-		setTimeout( async () => { await PlayHitAndMissSounds(attacksData, move.category) }, 1100);
+		await timeout(1100);
+		await PlayHitAndMissSounds(attacksData, move.category);
 	}
 
     return true;

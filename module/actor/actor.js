@@ -548,9 +548,19 @@ export class PTUActor extends Actor {
    * @param {PTUActor} targetActor the target actor that needs to be damaged.
    * @returns 
    */
-  async executeMove(moveId, { trainerActor, targetActor } = {}) {
+  async executeMove(moveId, { trainerActor, targetActor, passingInMove, passedInMove } = {}) {
     if (!moveId) return;
-    const move = this.items.get(moveId)
+
+    let move;
+    if(passingInMove && passedInMove)
+    {
+      move = passedInMove;
+    }
+    else
+    {
+      move = this.items.get(moveId);
+    }
+
     if (!move) return;
 
     if (!trainerActor) trainerActor = game.actors.get(this.data.data.owner);
@@ -570,10 +580,10 @@ export class PTUActor extends Actor {
       return;
     }
 
-    await this.rollMove(move, { targets })
+    await this.rollMove(move, { targets, passingInMove:passingInMove })
   }
 
-  async rollMove(move, options = { moveId, bonusDamage, targets }) {
+  async rollMove(move, options = { moveId, bonusDamage, targets, passingInMove }) {
     if (!move && options.moveId) move = this.items.get(moveId);
     if (!move) return;
 
@@ -597,10 +607,13 @@ export class PTUActor extends Actor {
     }
 
     // Set round properties if applicable
-    if (move.getFlag("ptu", "lastRoundUsed") != (game.combat?.current?.round ?? 0))
-      await move.setFlag("ptu", "lastRoundUsed", game.combat?.current?.round ?? 0);
-    if (game.combat?.id && (move.getFlag("ptu", "lastEncounterUsed") != game.combat?.id)) await move.setFlag("ptu", "lastEncounterUsed", game.combat?.id);
-
+    if(!options.passingInMove)
+    {
+      if (move.getFlag("ptu", "lastRoundUsed") != (game.combat?.current?.round ?? 0))
+        await move.setFlag("ptu", "lastRoundUsed", game.combat?.current?.round ?? 0);
+      if (game.combat?.id && (move.getFlag("ptu", "lastEncounterUsed") != game.combat?.id)) await move.setFlag("ptu", "lastEncounterUsed", game.combat?.id);
+    }
+    
     // Apply Type Strategist
     if (attack.abilityBonuses.typeStratagistApplies) {
       const dr = (this.data.data.health.value < (this.data.data.health.total / 3)) ? 10 : 5;

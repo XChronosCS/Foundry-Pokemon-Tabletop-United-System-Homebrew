@@ -114,6 +114,7 @@ export class PTUCombatOverrides extends Combat {
           defeated: combatant.data.defeated,
           hidden: combatant.data.hidden,
           initiative: actualInit,
+          flags:{"ptu.initiative_boss_modifier": Number(actualInit - combatant.initiative)},
           sceneId: combatant.data.sceneId,
           tokenId: combatant.data.tokenId,
         });

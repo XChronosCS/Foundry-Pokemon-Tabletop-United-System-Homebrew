@@ -107,7 +107,12 @@ export class PTUActor extends Actor {
         {
           let old_initiative = Math.floor(combatant.initiative);
           let initiative_tiebreaker = combatant.initiative - old_initiative;
-          let new_initiative = combatant.actor.data.data.stats.spd.total + combatant.actor.data.data.modifiers.initiative.total;
+          let boss_initiative_modifier = 0;
+          if(combatant?.actor?.data?.data?.boss?.is && combatant?.data?.flags?.ptu?.initiative_boss_modifier)
+          {
+            boss_initiative_modifier = combatant?.data?.flags?.ptu?.initiative_boss_modifier;
+          }
+          let new_initiative = combatant.actor.data.data.stats.spd.total + combatant.actor.data.data.modifiers.initiative.total + boss_initiative_modifier;
           if(new_initiative != old_initiative)
           {
             game.combat.updateEmbeddedDocuments('Combatant', [{ _id:combatant.id, initiative:Number(new_initiative+initiative_tiebreaker) }]);

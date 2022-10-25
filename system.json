@@ -102,9 +102,9 @@
   "primaryTokenAttribute": "health",
   "secondaryTokenAttribute": "exp",
   "url": "https://github.com/dylanpiera/Foundry-Pokemon-Tabletop-United-System",
-  "manifest": "https://github.com/XChronosCS/Foundry-Pokemon-Tabletop-United-System-Homebrew/blob/master/system.json",
-  "changelog": "https://github.com/XChronosCS/Foundry-Pokemon-Tabletop-United-System-Homebrew/blob/master/changelog.md",
-  "download": "https://github.com/XChronosCS/Foundry-Pokemon-Tabletop-United-System-Homebrew/blob/master/system.zip",
+  "manifest": "https://github.com/XChronosCS/Foundry-Pokemon-Tabletop-United-System-Homebrew/releases/latest/download/system.json",
+  "changelog": "https://github.com/XChronosCS/Foundry-Pokemon-Tabletop-United-System-Homebrew/releases/latest/download/changelog.md",
+  "download": "https://github.com/XChronosCS/Foundry-Pokemon-Tabletop-United-System-Homebrew/releases/latest/download/system.zip",
   "initiative": "",
   "license": "LICENSE.txt"
 }
